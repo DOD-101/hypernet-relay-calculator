@@ -1,7 +1,12 @@
 <script lang="ts">
+  import { customParse, displayNumber } from "$lib";
+
+  import IskInput from "./iskInput.svelte";
+  import IskOutput from "./iskOutput.svelte";
+
   let market_buy = $state(0);
   let hypercore_price = $state(300_000);
-  let hypercore_amount = $state(0);
+  let hypercore_amount = $state(1);
   let total_nodes = $state(8);
   let node_price = $state(0);
 
@@ -18,43 +23,20 @@
     (market_buy - node_price * (total_nodes - own_nodes)) * -1,
   );
 
-  function customParse(value: string) {
-    return parseInt(value.replaceAll(",", "").replaceAll("_", ""));
-  }
-
-  function roundN(value: number, n: number) {
-    return Math.round(value * 10 ** n) / 10 ** n;
-  }
-
-  function displayNumber(value: number) {
-    console.log(total_nodes);
-    return value.toLocaleString("en-US", {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 0,
-    });
-  }
-
-  function abbreviateNumber(value: number) {
-    const suffixes = ["", "thousand", "million", "billion", "trillion"];
-    let suffixIndex = 0;
-
-    while (value >= 1000 && suffixIndex < suffixes.length - 1) {
-      value /= 1000;
-      suffixIndex++;
-    }
-
-    return `${roundN(value, 2)} ${suffixes[suffixIndex]}`;
-  }
+  let average_per_ship = $derived(
+    win_earnings * (own_nodes / total_nodes) +
+      loose_loss * (1 - own_nodes / total_nodes),
+  );
 </script>
 
 <h1>HyperNet Relay Calculator</h1>
 
 <h2>Item</h2>
 
-<p>Market buy of the item</p>
-<input
-  oninput={(e) => (market_buy = customParse(e.target.value))}
-  title="≈ {abbreviateNumber(market_buy)}"
+<p>Cost</p>
+<IskInput
+  oninput={(e: Event) =>
+    (market_buy = customParse((e.target as HTMLInputElement).value))}
 />
 
 <h3>Nodes</h3>
@@ -62,18 +44,20 @@
 <div class="flex flex-row gap-4">
   <div>
     <p>Price</p>
-    <input
-      oninput={(e) => (node_price = customParse(e.target.value))}
-      title="≈ {abbreviateNumber(node_price)}"
+    <IskInput
+      oninput={(e: Event) =>
+        (node_price = customParse((e.target as HTMLInputElement).value))}
     />
   </div>
 
-  <div>
+  <div class="flex flex-col">
     <p>Amount</p>
     <select
+      class="self-end"
       name="nodes_amount"
       id=""
-      oninput={(e) => (total_nodes = e.target.value)}
+      oninput={(e) =>
+        (total_nodes = Number.parseInt((e.target as HTMLSelectElement).value))}
     >
       <option value="8">8</option>): 10
       <option value="16">16</option>
@@ -82,12 +66,16 @@
     </select>
   </div>
 
-  <div>
-    <p>Amount you buy</p>
+  <div class="flex flex-col">
+    <p>you buy</p>
     <input
+      class="self-end w-15"
       type="number"
       value={own_nodes}
-      oninput={(e) => (own_nodes = e.target.value)}
+      oninput={(e) =>
+        (own_nodes = Number.parseInt((e.target as HTMLInputElement).value))}
+      max={total_nodes}
+      min="0"
     />
   </div>
 </div>
@@ -96,41 +84,50 @@
 
 <div class="flex flex-row gap-4">
   <div>
-    <p>Price</p>
-    <input
-      oninput={(e) => (hypercore_price = customParse(e.target.value))}
-      title="≈ {abbreviateNumber(hypercore_price)}"
+    <p>Cost</p>
+    <IskInput
+      oninput={(e: Event) =>
+        (hypercore_price = customParse((e.target as HTMLInputElement).value))}
+      default_value={hypercore_price}
     />
   </div>
 
-  <div>
-    <p>Needed</p>
-    <input type="number" oninput={(e) => (hypercore_amount = e.target.value)} />
+  <div class="flex flex-col">
+    <p>Amount</p>
+    <input
+      class="self-end w-15"
+      type="number"
+      min="1"
+      oninput={(e) =>
+        (hypercore_amount = Number.parseInt(
+          (e.target as HTMLInputElement).value,
+        ))}
+      value={hypercore_amount}
+    />
   </div>
 </div>
 
 <h2>Taxes</h2>
 
-<p>HyperNet Relay fee (5%): {displayNumber(relay_tax)}</p>
-<p>HyperCore tax: {displayNumber(hypercore_tax)}</p>
+<IskOutput variable={relay_tax} text="HyperNet Relay fee (5%)" />
+<IskOutput variable={hypercore_tax} text="HyperCore tax" />
 
 <h2>Earnings</h2>
 
-<p>Win: {displayNumber(win_earnings)}</p>
-<p>Loose: {displayNumber(loose_loss)}</p>
+<IskOutput variable={win_earnings} text="Win" />
+<IskOutput variable={loose_loss} text="Loose" />
 
-<p>
-  Average (per ship): {displayNumber(
-    win_earnings * (own_nodes / total_nodes) +
-      loose_loss * (1 - own_nodes / total_nodes),
-  )}
-</p>
+<IskOutput variable={average_per_ship} text="Average (per ship)" />
 
 <p>Win-Loss ration: {displayNumber((win_earnings / loose_loss) * -1)}</p>
 
-<p>Total price: {displayNumber(total_price)}</p>
+<IskOutput variable={total_price} text="Total price" />
 
 <style>
+  * {
+    color: #ffffff;
+  }
+
   h1 {
     font-size: 2rem;
     margin-top: 2rem;
@@ -153,9 +150,9 @@
     content: "";
   }
 
-  input {
-    font-family: monospace;
-    background-color: #444444;
-    color: #ffffff;
+  input,
+  select {
+    background-color: #21232b;
+    height: 1.25rem;
   }
 </style>
