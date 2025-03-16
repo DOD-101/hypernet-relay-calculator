@@ -121,7 +121,7 @@
 
 <p>Win-Loss ration: {displayNumber((win_earnings / loose_loss) * -1)}</p>
 
-<IskOutput variable={total_price} text="Total price" />
+<IskOutput variable={total_price} text="Total price" className="mt-3" />
 
 <style>
   * {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { abbreviateNumber, displayNumber } from "$lib";
 
-  let { variable, text } = $props();
+  let { variable, text, className = "" } = $props();
 
   let icon = $state("content_copy");
 
@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class="relative w-fit pr-6">
+<div class="relative w-fit pr-6 {className}">
   <p title="≈ {abbreviateNumber(variable)}">
     {text}: {displayNumber(variable)} <span class="isk">Isk</span>
   </p>
