@@ -9,20 +9,31 @@
   </div>
 </main>
 
+<footer class="h-16 flex flex-col">
+  <p class="text-s self-center mt-auto">
+    My in-game name is: <span class="bg-gray-600 rounded-xs font-mono pl-1 pr-1"
+      >Su Meza</span
+    > Any donations are greatly appreciated!
+  </p>
+  <p class="text-xs self-center">
+    © 2014 CCP hf. All rights reserved. "EVE", "EVE Online", "CCP", and all
+    related logos and images are trademarks or registered trademarks of CCP hf.
+  </p>
+</footer>
+
 <style>
   :root {
     --background-color: #151720;
   }
 
-  .main-container {
-    background-color: var(--background-color);
-    padding: 1rem;
-    padding-top: 0;
-    border-radius: 0.5rem;
+  main {
+    min-height: calc(100vh - 4rem);
   }
 
-  main {
+  footer,
+  main,
+  .main-container {
     background-color: var(--background-color);
-    min-height: 100vh;
+    color: white;
   }
 </style>
