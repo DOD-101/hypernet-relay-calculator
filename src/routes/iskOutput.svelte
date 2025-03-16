@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { abbreviateNumber } from "$lib";
+  import { abbreviateNumber, displayNumber } from "$lib";
 
   let { variable, text } = $props();
 
@@ -18,7 +18,7 @@
 
 <div class="relative w-fit pr-6">
   <p title="≈ {abbreviateNumber(variable)}">
-    {text}: {variable} <span class="isk">Isk</span>
+    {text}: {displayNumber(variable)} <span class="isk">Isk</span>
   </p>
 
   <button
