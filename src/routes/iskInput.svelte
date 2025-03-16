@@ -37,7 +37,7 @@
       oninput(e);
     }}
     title="≈ {abbreviateNumber(value)}"
-    value={displayNumber(default_value)}
+    value={displayNumber(value)}
   />
 
   <span>Isk</span>
