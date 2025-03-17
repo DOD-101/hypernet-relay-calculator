@@ -1,38 +1,36 @@
-# sv
+# Hypernet Relay Calculator
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A calculator to help you find the best items for listing on the Hypernet Relay
 
-## Creating a project
+## Website
 
-If you're seeing this, you've probably already done this step. Congrats!
+https://dod-101.github.io/hypernet-relay-calculator/
+
+## Running locally
+
+You will need [Bun](https://bun.sh/) installed
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+bun install
+bun run dev
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+or using [Node](https://nodejs.org/en/)
 
 ```bash
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## Planned features
 
-To create a production version of your app:
+- [ ] Ability to save different items to easily compare them
 
-```bash
-npm run build
-```
+## License & Attribution
 
-You can preview the production build with `npm run preview`.
+This project is licensed [MIT](./LICENSE.txt)
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- The Icons are [Material Symbols](https://fonts.google.com/icons)
+- The font used is [Anta](https://fonts.google.com/specimen/Anta)
+
+> © 2014 CCP hf. All rights reserved. "EVE", "EVE Online", "CCP", and all related logos and images are trademarks or registered trademarks of CCP hf.
