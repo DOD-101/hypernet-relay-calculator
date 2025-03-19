@@ -40,7 +40,7 @@
     value={displayNumber(value)}
   />
 
-  <span>Isk</span>
+  <span class="isk">Isk</span>
 </div>
 
 <style>
@@ -56,6 +56,7 @@
     height: 1.25rem;
     border-radius: 0.125rem;
   }
+
   input {
     width: 150px;
     padding: 0;
@@ -63,8 +64,7 @@
     height: 1.25rem;
   }
 
-  span {
-    color: #bcbcbc;
+  .isk {
     position: absolute;
     right: 5px;
     top: 50%;

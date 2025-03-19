@@ -37,9 +37,6 @@
     color: #fff;
   }
 
-  .isk {
-    color: #cccccc;
-  }
   .material-symbols-outlined {
     font-size: 0.85rem;
   }
