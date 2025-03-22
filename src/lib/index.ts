@@ -1,5 +1,7 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+export const PRICE_TO_CORE_RATIO = 10_000_000_000_000 / 822_786;
+
 export function customParse(value: string) {
 	return Number.parseInt(value.replaceAll(",", "").replaceAll("_", "")) || 0;
 }

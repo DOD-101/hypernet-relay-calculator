@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { customParse, displayNumber } from "$lib";
+  import { customParse, displayNumber, PRICE_TO_CORE_RATIO } from "$lib";
 
   import IskInput from "./iskInput.svelte";
   import IskOutput from "./iskOutput.svelte";
@@ -45,8 +45,13 @@
   <div>
     <p>Price</p>
     <IskInput
-      oninput={(e: Event) =>
-        (node_price = customParse((e.target as HTMLInputElement).value))}
+      oninput={(e: Event) => {
+        node_price = customParse((e.target as HTMLInputElement).value);
+        hypercore_amount = Math.max(
+          Math.floor((node_price * total_nodes) / PRICE_TO_CORE_RATIO),
+          1,
+        );
+      }}
     />
   </div>
 
@@ -56,8 +61,14 @@
       class="self-end"
       name="nodes_amount"
       id=""
-      oninput={(e) =>
-        (total_nodes = Number.parseInt((e.target as HTMLSelectElement).value))}
+      oninput={(e) => {
+        total_nodes = Number.parseInt((e.target as HTMLSelectElement).value);
+
+        hypercore_amount = Math.max(
+          Math.floor((node_price * total_nodes) / PRICE_TO_CORE_RATIO),
+          1,
+        );
+      }}
     >
       <option value="8">8</option>): 10
       <option value="16">16</option>
