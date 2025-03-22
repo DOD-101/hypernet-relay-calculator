@@ -3,7 +3,7 @@
   let { children } = $props();
 </script>
 
-<main class="flex justify-center flex-col items-center">
+<main>
   <div class="main-container">
     {@render children()}
   </div>
