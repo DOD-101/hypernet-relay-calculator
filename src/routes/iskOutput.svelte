@@ -23,7 +23,7 @@
 
   <button
     aria-label="Copy"
-    class="ml-2 hover:scale-105 transition-all duration-75 rounded-full top-0 right-1 absolute"
+    class="ml-2 hover:cursor-pointer rounded-full top-0 right-1 absolute"
     onclick={copy}
     ><span id="copy_icon" class="material-symbols-outlined">
       {icon}
@@ -38,6 +38,6 @@
   }
 
   .material-symbols-outlined {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 </style>

@@ -3,7 +3,7 @@
   import Listing from "./HyperNetListing.svelte";
 
   let {
-    listings,
+    listings = $bindable([]),
     className,
   }: { listings: HyperNetListing[]; className: string } = $props();
 </script>
@@ -34,10 +34,29 @@
       <th>Average</th>
 
       <th>Total</th>
+      <th></th>
     </tr>
 
     {#each listings as l}
-      <Listing listing={l} />
+      <tr class="*:p-2 *:text-center *:content-center">
+        <Listing listing={l} />
+        <td>
+          <div class="h-full w-full flex flex-col justify-center">
+            <button
+              class="material-symbols-outlined block cursor-pointer text-red-300 hover:text-red-400"
+              onclick={() => {
+                listings = listings.filter((listing) => listing.id !== l.id);
+              }}>delete</button
+            >
+          </div>
+        </td>
+      </tr>
     {/each}
   </tbody>
 </table>
+
+<style>
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+</style>

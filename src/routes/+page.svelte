@@ -172,7 +172,7 @@
 </div>
 
 <div class="m-auto w-fit">
-  <ListingsList {listings} className="m-auto mt-5" />
+  <ListingsList bind:listings className="m-auto mt-5" />
 
   <button
     class="btn"
