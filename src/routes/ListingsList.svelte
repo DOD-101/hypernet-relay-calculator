@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { HyperNetListing } from "$lib/listing";
   import Listing from "./HyperNetListing.svelte";
+  import ListingsListHeader from "./ListingsListHeader.svelte";
+
+  let active = $state("Name");
 
   let {
     listings = $bindable([]),
@@ -19,26 +22,94 @@
     </tr>
 
     <tr class="*:p-2">
-      <th>Name</th>
-      <th>Cost</th>
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Name"
+        description="Name of the item"
+        sort_fn={(a: HyperNetListing, b: HyperNetListing) =>
+          a.item_name.localeCompare(b.item_name)}
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Cost"
+        description="Cost of the item"
+        key="item_cost"
+      />
 
-      <th>Node Price</th>
-      <th>Amount</th>
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Price"
+        description="Price of each node"
+        key="node_price"
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Amount"
+        description="Amount of Nodes"
+        key="nodes"
+      />
 
-      <th>HyperCores</th>
-      <th>Relay Fee</th>
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="HyperCores"
+        description="Tax amount in form of HyperCores"
+        key="hypercores"
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Relay Fee"
+        description="Relay Fee Tax (5%)"
+        key="relay_fee"
+      />
 
-      <th>Win</th>
-      <th>Loss</th>
-      <th>Ratio</th>
-      <th>Average</th>
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Win"
+        description="Earnings if you win the Item"
+        key="win"
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Loss"
+        description="Losses if you lose the Item"
+        key="hypercores"
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Ratio"
+        description="Ratio of Win to Loss"
+        key="ratio"
+      />
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Average"
+        description="Average earnings per item"
+        key="average_per_item"
+      />
 
-      <th>Total</th>
+      <ListingsListHeader
+        bind:listings
+        bind:active
+        title="Total"
+        description="Total price to list the item for on the HyperNet Relay"
+        key="total_price"
+      />
+
       <th></th>
     </tr>
 
     {#each listings as l}
-      <tr class="*:p-2 *:text-center *:content-center">
+      <tr class="*:text-center *:content-center">
         <Listing listing={l} />
         <td>
           <div class="h-full w-full flex flex-col justify-center">
