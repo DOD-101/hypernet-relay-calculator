@@ -6,32 +6,24 @@
   import IskOutput from "./iskOutput.svelte";
   import ListingsList from "./ListingsList.svelte";
 
-  let market_buy = $state(0);
-  let item_name = $state("");
-
-  let hypercore_price = $state(300_000);
-  let hypercore_amount = $state(1);
-  let total_nodes = $state(8);
-  let node_price = $state(0);
-
   let listings: HyperNetListing[] = $state([]);
+  let cl = $state(new HyperNetListing("", 0, 8, 4, 0, 1, 300_000).toObj());
 
-  let total_price = $derived(total_nodes * node_price);
-  let own_nodes = $state(4);
+  let total_price = $derived(cl.nodes * cl.node_price);
 
   let relay_tax = $derived(total_price * 0.05);
-  let hypercore_tax = $derived(hypercore_price * hypercore_amount);
+  let hypercore_tax = $derived(cl.hypercore_cost * cl.hypercores);
 
-  let win_earnings = $derived(
-    node_price * (total_nodes - own_nodes) - relay_tax - hypercore_tax,
+  let win = $derived(
+    cl.node_price * (cl.nodes - cl.own_nodes) - relay_tax - hypercore_tax,
   );
-  let loose_loss = $derived(
-    (market_buy - node_price * (total_nodes - own_nodes)) * -1,
+
+  let loss = $derived(
+    (cl.item_cost - cl.node_price * (cl.nodes - cl.own_nodes)) * -1,
   );
 
   let average_per_ship = $derived(
-    win_earnings * (own_nodes / total_nodes) +
-      loose_loss * (1 - own_nodes / total_nodes),
+    win * (cl.own_nodes / cl.nodes) + loss * (1 - cl.own_nodes / cl.nodes),
   );
 </script>
 
@@ -45,7 +37,7 @@
       <p>Cost</p>
       <IskInput
         oninput={(e: Event) =>
-          (market_buy = customParse((e.target as HTMLInputElement).value))}
+          (cl.item_cost = customParse((e.target as HTMLInputElement).value))}
       />
     </div>
 
@@ -54,7 +46,7 @@
       <input
         type="text"
         class="w-40"
-        oninput={(e) => (item_name = (e.target as HTMLInputElement).value)}
+        oninput={(e) => (cl.item_name = (e.target as HTMLInputElement).value)}
       />
     </div>
   </div>
@@ -66,9 +58,9 @@
       <p>Price</p>
       <IskInput
         oninput={(e: Event) => {
-          node_price = customParse((e.target as HTMLInputElement).value);
-          hypercore_amount = Math.max(
-            Math.floor((node_price * total_nodes) / PRICE_TO_CORE_RATIO),
+          cl.node_price = customParse((e.target as HTMLInputElement).value);
+          cl.hypercores = Math.max(
+            Math.floor((cl.node_price * cl.nodes) / PRICE_TO_CORE_RATIO),
             1,
           );
         }}
@@ -82,10 +74,10 @@
         name="nodes_amount"
         id=""
         oninput={(e) => {
-          total_nodes = Number.parseInt((e.target as HTMLSelectElement).value);
+          cl.nodes = Number.parseInt((e.target as HTMLSelectElement).value);
 
-          hypercore_amount = Math.max(
-            Math.floor((node_price * total_nodes) / PRICE_TO_CORE_RATIO),
+          cl.hypercores = Math.max(
+            Math.floor((cl.node_price * cl.nodes) / PRICE_TO_CORE_RATIO),
             1,
           );
         }}
@@ -102,10 +94,12 @@
       <input
         class="self-end w-15"
         type="number"
-        value={own_nodes}
+        value={cl.own_nodes}
         oninput={(e) =>
-          (own_nodes = Number.parseInt((e.target as HTMLInputElement).value))}
-        max={total_nodes}
+          (cl.own_nodes = Number.parseInt(
+            (e.target as HTMLInputElement).value,
+          ))}
+        max={cl.nodes}
         min="0"
       />
     </div>
@@ -118,8 +112,10 @@
       <p>Cost</p>
       <IskInput
         oninput={(e: Event) =>
-          (hypercore_price = customParse((e.target as HTMLInputElement).value))}
-        default_value={hypercore_price}
+          (cl.hypercore_cost = customParse(
+            (e.target as HTMLInputElement).value,
+          ))}
+        default_value={cl.hypercore_cost}
       />
     </div>
 
@@ -130,10 +126,10 @@
         type="number"
         min="1"
         oninput={(e) =>
-          (hypercore_amount = Number.parseInt(
+          (cl.hypercores = Number.parseInt(
             (e.target as HTMLInputElement).value,
           ))}
-        value={hypercore_amount}
+        value={cl.hypercores}
       />
     </div>
   </div>
@@ -145,12 +141,12 @@
 
   <h2>Earnings</h2>
 
-  <IskOutput variable={win_earnings} text="Win" />
-  <IskOutput variable={loose_loss} text="Loose" />
+  <IskOutput variable={win} text="Win" />
+  <IskOutput variable={loss} text="Loose" />
 
   <IskOutput variable={average_per_ship} text="Average (per ship)" />
 
-  <p>Win-Loss ration: {displayNumber((win_earnings / loose_loss) * -1)}</p>
+  <p>Win-Loss ration: {displayNumber((win / loss) * -1)}</p>
 
   <IskOutput variable={total_price} text="Total price" className="mt-3" />
 
@@ -160,13 +156,13 @@
     onclick={() => {
       listings.push(
         new HyperNetListing(
-          item_name,
-          market_buy,
-          total_nodes,
-          own_nodes,
-          node_price,
-          hypercore_amount,
-          hypercore_price,
+          cl.item_name,
+          cl.item_cost,
+          cl.nodes,
+          cl.own_nodes,
+          cl.node_price,
+          cl.hypercores,
+          cl.hypercore_cost,
         ),
       );
     }}

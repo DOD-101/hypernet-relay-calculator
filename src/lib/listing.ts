@@ -21,10 +21,6 @@ export class HyperNetListing {
 		hyper_cores: number,
 		hyper_core_cost: number,
 	) {
-		console.assert(nodes > 0, "Nodes must be greater than 0");
-		console.assert(node_price > 0, "Node price must be greater than 0");
-		console.assert(hyper_cores > 0, "HyperCores must be greater than 0");
-
 		this.id = crypto.randomUUID();
 		this.createdAt = new Date();
 
@@ -39,12 +35,16 @@ export class HyperNetListing {
 		this.hypercore_cost = hyper_core_cost;
 	}
 
+	public toObj() {
+		return { ...this };
+	}
+
 	get total_price() {
 		return this.nodes * this.node_price;
 	}
 
 	get relay_fee() {
-		return this.item_cost * 0.05;
+		return this.total_price * 0.05;
 	}
 
 	get hypercore_tax() {
@@ -52,6 +52,7 @@ export class HyperNetListing {
 	}
 
 	get win() {
+		console.log(this.node_price, this.nodes, this.own_nodes);
 		return (
 			this.node_price * (this.nodes - this.own_nodes) -
 			this.relay_fee -
