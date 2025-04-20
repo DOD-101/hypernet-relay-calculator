@@ -1,16 +1,16 @@
 export class HyperNetListing {
-	public id: string;
-	public createdAt: Date;
+	public id: string = $state("");
+	public createdAt: Date = $state(new Date());
 
-	public item_name: string;
-	public item_cost: number;
+	public item_name: string = $state("");
+	public item_cost: number = $state(0);
 
-	public nodes: number;
-	public own_nodes: number;
-	public node_price: number;
+	public nodes: number = $state(0);
+	public own_nodes: number = $state(0);
+	public node_price: number = $state(0);
 
-	public hypercores: number;
-	public hypercore_cost: number;
+	public hypercores: number = $state(0);
+	public hypercore_cost: number = $state(0);
 
 	constructor(
 		item_name: string,
@@ -18,8 +18,8 @@ export class HyperNetListing {
 		nodes: number,
 		own_nodes: number,
 		node_price: number,
-		hyper_cores: number,
-		hyper_core_cost: number,
+		hypercores: number,
+		hypercore_cost: number,
 	) {
 		this.id = crypto.randomUUID();
 		this.createdAt = new Date();
@@ -31,12 +31,20 @@ export class HyperNetListing {
 		this.own_nodes = own_nodes;
 		this.node_price = node_price;
 
-		this.hypercores = hyper_cores;
-		this.hypercore_cost = hyper_core_cost;
+		this.hypercores = hypercores;
+		this.hypercore_cost = hypercore_cost;
 	}
 
 	public toObj() {
-		return { ...this };
+		return {
+			item_name: this.item_name,
+			item_cost: this.item_cost,
+			nodes: this.nodes,
+			own_nodes: this.own_nodes,
+			node_price: this.node_price,
+			hypercores: this.hypercores,
+			hypercore_cost: this.hypercore_cost,
+		};
 	}
 
 	get total_price() {
@@ -52,7 +60,6 @@ export class HyperNetListing {
 	}
 
 	get win() {
-		console.log(this.node_price, this.nodes, this.own_nodes);
 		return (
 			this.node_price * (this.nodes - this.own_nodes) -
 			this.relay_fee -

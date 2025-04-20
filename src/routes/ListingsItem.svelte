@@ -1,6 +1,6 @@
 <script lang="ts">
   import { displayNumber } from "$lib";
-  import { HyperNetListing } from "$lib/listing";
+  import { HyperNetListing } from "./HyperNetListing.svelte";
 
   let { listing }: { listing: HyperNetListing } = $props();
 </script>

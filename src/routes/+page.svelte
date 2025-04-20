@@ -1,30 +1,13 @@
 <script lang="ts">
   import { customParse, displayNumber, PRICE_TO_CORE_RATIO } from "$lib";
-  import { HyperNetListing } from "$lib/listing";
+  import { HyperNetListing } from "./HyperNetListing.svelte.ts";
 
   import IskInput from "./iskInput.svelte";
   import IskOutput from "./iskOutput.svelte";
   import ListingsList from "./ListingsList.svelte";
 
   let listings: HyperNetListing[] = $state([]);
-  let cl = $state(new HyperNetListing("", 0, 8, 4, 0, 1, 300_000).toObj());
-
-  let total_price = $derived(cl.nodes * cl.node_price);
-
-  let relay_tax = $derived(total_price * 0.05);
-  let hypercore_tax = $derived(cl.hypercore_cost * cl.hypercores);
-
-  let win = $derived(
-    cl.node_price * (cl.nodes - cl.own_nodes) - relay_tax - hypercore_tax,
-  );
-
-  let loss = $derived(
-    (cl.item_cost - cl.node_price * (cl.nodes - cl.own_nodes)) * -1,
-  );
-
-  let average_per_ship = $derived(
-    win * (cl.own_nodes / cl.nodes) + loss * (1 - cl.own_nodes / cl.nodes),
-  );
+  let cl = $state(new HyperNetListing("", 0, 8, 4, 0, 1, 300_000));
 </script>
 
 <div class="m-auto w-fit">
@@ -136,35 +119,25 @@
 
   <h2>Taxes</h2>
 
-  <IskOutput variable={relay_tax} text="HyperNet Relay fee (5%)" />
-  <IskOutput variable={hypercore_tax} text="HyperCore tax" />
+  <IskOutput variable={cl.relay_fee} text="HyperNet Relay fee (5%)" />
+  <IskOutput variable={cl.hypercore_tax} text="HyperCore tax" />
 
   <h2>Earnings</h2>
 
-  <IskOutput variable={win} text="Win" />
-  <IskOutput variable={loss} text="Loose" />
+  <IskOutput variable={cl.win} text="Win" />
+  <IskOutput variable={cl.loss} text="Loose" />
 
-  <IskOutput variable={average_per_ship} text="Average (per ship)" />
+  <IskOutput variable={cl.average_per_item} text="Average (per ship)" />
 
-  <p>Win-Loss ration: {displayNumber((win / loss) * -1)}</p>
+  <p>Win-Loss ration: {displayNumber((cl.win / cl.loss) * -1)}</p>
 
-  <IskOutput variable={total_price} text="Total price" className="mt-3" />
+  <IskOutput variable={cl.total_price} text="Total price" className="mt-3" />
 
   <button
     class="btn"
     aria-label="Add to Items"
     onclick={() => {
-      listings.push(
-        new HyperNetListing(
-          cl.item_name,
-          cl.item_cost,
-          cl.nodes,
-          cl.own_nodes,
-          cl.node_price,
-          cl.hypercores,
-          cl.hypercore_cost,
-        ),
-      );
+      listings.push(cl);
     }}
   >
     Add to items</button
@@ -177,7 +150,9 @@
   <button
     class="btn"
     onclick={() => {
-      navigator.clipboard.writeText(JSON.stringify(listings));
+      navigator.clipboard.writeText(
+        JSON.stringify(listings.map((l) => l.toObj())),
+      );
     }}>Export List</button
   >
 

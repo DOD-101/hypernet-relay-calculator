@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { HyperNetListing } from "$lib/listing";
-  import Listing from "./HyperNetListing.svelte";
+  import type { HyperNetListing } from "./HyperNetListing.svelte.ts";
+  import Listing from "./ListingsItem.svelte";
   import ListingsListHeader from "./ListingsListHeader.svelte";
 
   let active = $state("Name");
